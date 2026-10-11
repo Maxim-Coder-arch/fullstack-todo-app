@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StatsManager } from "./stats-manager";
 import { FilterChoiceManager } from "./filter-choice-manager";
+import { AddTaskWindow } from "./add-task-window";
 
 export enum FilterChoice {
     all = "all",
@@ -30,13 +31,20 @@ const filterConfig: IFilterConfig[] = [
 
 export const TodoManager = () => {
     const [activeFilter, setActiveFilter] = useState(FilterChoice.all);
+    const [isAddedNewtask, setIsAddedNewTask] = useState(false);
 
-    function changeActiveFilter(variant: FilterChoice) {
+    const changeActiveFilter = (variant: FilterChoice) => {
         setActiveFilter(variant)
     }
 
+    const changeAddedTaskState = () => {
+        setIsAddedNewTask(
+            prev => !prev
+        )
+    }
+
     return (
-        <div className="min-h-[400px] min-w-[350px] bg-mist-800 rounded-lg outline-dashed outline-1 outline-offset-4 outline-mist-700 shadow-2xl shadow-amber-100/20 p-3 flex flex-col items-center gap-3">
+        <div className="min-h-[400px] min-w-[350px] bg-mist-800 rounded-lg outline-dashed outline-1 outline-offset-4 outline-mist-700 shadow-2xl shadow-amber-100/20 p-3 flex flex-col items-center gap-3 relative">
             <h1 className="text-2xl text-mist-400 font-bold">Todo manager</h1>
 
             <FilterChoiceManager
@@ -45,7 +53,9 @@ export const TodoManager = () => {
                 changeActiveFilter={changeActiveFilter}
             />
 
-            <StatsManager />
+            <StatsManager changeAddedTaskState={changeAddedTaskState} isAddedNewtask={isAddedNewtask} />
+
+            { isAddedNewtask && <AddTaskWindow /> }
         </div>
     )
 }
